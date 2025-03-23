@@ -1,12 +1,12 @@
 import LinkButton from "@/components/LinkButton";
 import { SafeAreaView, StyleSheet, View } from "react-native";
-import ClotheList from "@/components/ClotheList";
+import OutfitList from "@/components/OutfitList";
 
 export default function Index() {
   return (
     <SafeAreaView style={styles.container}>
-      <LinkButton title="Add clothing" href="/clothes/add" isFullWidth={true} />
-      <ClotheList />
+      <LinkButton title="Create outfit" href="/outfit/add" isFullWidth={true} />
+      <OutfitList />
     </SafeAreaView>
   );
 }
