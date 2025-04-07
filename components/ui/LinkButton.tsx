@@ -1,5 +1,6 @@
 import { Href, Link } from "expo-router";
 import { StyleSheet, View, Text } from "react-native";
+import COLORS from "@/theme/colors";
 
 interface LinkButtonProps {
   href: Href;
@@ -34,9 +35,9 @@ const styles = StyleSheet.create({
     width: "auto",
   },
   button: {
-    backgroundColor: "white",
+    backgroundColor: COLORS.background,
     borderWidth: 1,
-    borderColor: "#ffd33d",
+    borderColor: COLORS.primary,
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   buttonLabel: {
-    color: "#333",
+    color: COLORS.text,
     fontSize: 16,
     textAlign: "center",
   },

@@ -1,7 +1,8 @@
-import * as ImagePicker from "expo-image-picker";
-import { Alert, View, Image, StyleSheet } from "react-native";
-import { useState } from "react";
-import Button from "./Button";
+import * as ImagePicker from 'expo-image-picker';
+import { useState } from 'react';
+import { Alert, Image, StyleSheet, View } from 'react-native';
+
+import Button from './Button';
 
 interface PhotoPickerProps {
   handleChangeImage: (arg: string) => void;
@@ -16,20 +17,19 @@ export default function PhotoPicker({
 
   const pickImage = async () => {
     Alert.alert(
-      "Choose an option",
-      "",
+      'Choose an option',
+      '',
       [
         {
-          text: "Take a picture",
+          text: 'Take a picture',
           onPress: async () => {
             const permission =
               await ImagePicker.requestCameraPermissionsAsync();
             if (permission.granted) {
               const result = await ImagePicker.launchCameraAsync({
-                mediaTypes: ["images"],
+                mediaTypes: ['images'],
                 quality: 1,
                 allowsEditing: true,
-                aspect: [4, 3],
               });
               if (!result.canceled) {
                 setImage(result.assets[0].uri);
@@ -39,16 +39,15 @@ export default function PhotoPicker({
           },
         },
         {
-          text: "Choose from gallery",
+          text: 'Choose from gallery',
           onPress: async () => {
             const permission =
               await ImagePicker.requestMediaLibraryPermissionsAsync();
             if (permission.granted) {
               const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ["images"],
+                mediaTypes: ['images'],
                 quality: 1,
                 allowsEditing: true,
-                aspect: [4, 3],
               });
               if (!result.canceled) {
                 setImage(result.assets[0].uri);
@@ -63,7 +62,7 @@ export default function PhotoPicker({
   };
 
   return (
-    <View style={styles.container}>
+    <View>
       <Button title="Choose an image" onPress={pickImage} isFullWidth={true} />
       {image && <Image source={{ uri: image }} style={styles.preview} />}
     </View>
@@ -71,15 +70,11 @@ export default function PhotoPicker({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    alignItems: "center",
-  },
   preview: {
-    width: "100%",
-    height: 200,
-    marginTop: 16,
+    width: '100%',
+    height: 300,
+    marginBottom: 16,
     borderRadius: 8,
-    resizeMode: "cover",
+    resizeMode: 'contain',
   },
 });

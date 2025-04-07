@@ -1,19 +1,20 @@
-import { Tabs } from "expo-router";
-
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { Tabs } from "expo-router";
+import { COLORS } from "@/theme/colors";
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#ffd33d",
+        tabBarActiveTintColor: COLORS.background,
+        tabBarInactiveTintColor: COLORS.text,
         headerStyle: {
-          backgroundColor: "#25292e",
+          backgroundColor: COLORS.primary,
         },
         headerShadowVisible: false,
-        headerTintColor: "#fff",
+        headerTintColor: COLORS.background,
         tabBarStyle: {
-          backgroundColor: "#25292e",
+          backgroundColor: COLORS.primary,
         },
       }}
     >

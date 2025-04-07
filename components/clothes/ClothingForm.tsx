@@ -1,16 +1,10 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-  Alert,
-  Image,
-} from "react-native";
-import Button from "@/components/Button";
-import * as ImagePicker from "expo-image-picker";
-import { Category, Season, Occasion, ClothingFormData } from "@/types/clothing";
+import React, { useState } from 'react';
+import { Alert, StyleSheet, Text, TextInput, View } from 'react-native';
+
+import Button from '@/components/ui/Button';
+import COLORS from '@/theme/colors';
+import { Category, ClothingFormData, Occasion, Season } from '@/types/clothing';
+import PhotoPicker from '../ui/ImagePicker';
 
 interface ClothingFormProps {
   initialData?: Partial<ClothingFormData>;
@@ -22,11 +16,11 @@ interface ClothingFormProps {
 export default function ClothingForm({
   initialData,
   onSubmit,
-  submitButtonTitle = "Save",
+  submitButtonTitle = 'Save',
   isLoading = false,
 }: ClothingFormProps) {
   const [formData, setFormData] = useState<ClothingFormData>({
-    name: initialData?.name || "",
+    name: initialData?.name || '',
     category: initialData?.category || Category.TOP,
     imageUrl: initialData?.imageUrl,
     seasons: initialData?.seasons || [],
@@ -45,7 +39,7 @@ export default function ClothingForm({
   const toggleArrayItem = <T extends Season | Occasion>(
     array: T[],
     item: T,
-    arrayName: "seasons" | "occasions"
+    arrayName: 'seasons' | 'occasions'
   ) => {
     if (array.includes(item)) {
       handleChange(
@@ -57,23 +51,9 @@ export default function ClothingForm({
     }
   };
 
-  const takePhoto = async () => {
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ["images"],
-      quality: 1,
-      allowsEditing: true,
-    });
-
-    if (!result.canceled) {
-      const uri = result.assets[0].uri;
-      setImagePreview(uri);
-      handleChange("imageUrl", uri);
-    }
-  };
-
   const handleSubmit = async () => {
     if (!formData.name) {
-      Alert.alert("Error", "Name is required");
+      Alert.alert('Error', 'Name is required');
       return;
     }
 
@@ -81,25 +61,24 @@ export default function ClothingForm({
       await onSubmit(formData);
       // Reset form data after successful submission
       setFormData({
-        name: "",
+        name: '',
         category: Category.TOP,
         imageUrl: undefined,
         seasons: [],
         occasions: [],
       });
-    } catch (error) {
-      console.error("Form submission error:", error);
-      Alert.alert("Error", "An error occurred while saving the clothing item.");
+    } catch {
+      Alert.alert('Error', 'An error occurred while saving the clothing item.');
     }
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <View>
       <Text style={styles.label}>Name</Text>
       <TextInput
         style={styles.input}
         value={formData.name}
-        onChangeText={(text) => handleChange("name", text)}
+        onChangeText={(text) => handleChange('name', text)}
         placeholder="Enter clothing name"
       />
 
@@ -109,7 +88,7 @@ export default function ClothingForm({
           <Button
             key={category}
             title={category}
-            onPress={() => handleChange("category", category)}
+            onPress={() => handleChange('category', category)}
             selected={formData.category === category}
             style={styles.optionButton}
           />
@@ -122,7 +101,7 @@ export default function ClothingForm({
           <Button
             key={season}
             title={season}
-            onPress={() => toggleArrayItem(formData.seasons, season, "seasons")}
+            onPress={() => toggleArrayItem(formData.seasons, season, 'seasons')}
             selected={formData.seasons.includes(season)}
             style={styles.optionButton}
           />
@@ -136,7 +115,7 @@ export default function ClothingForm({
             key={occasion}
             title={occasion}
             onPress={() =>
-              toggleArrayItem(formData.occasions, occasion, "occasions")
+              toggleArrayItem(formData.occasions, occasion, 'occasions')
             }
             selected={formData.occasions.includes(occasion)}
             style={styles.optionButton}
@@ -144,48 +123,42 @@ export default function ClothingForm({
         ))}
       </View>
 
-      <Button
-        title="Choose an image"
-        onPress={takePhoto}
-        isFullWidth={true}
-        style={styles.imageButton}
+      <PhotoPicker
+        handleChangeImage={(uri) => {
+          handleChange('imageUrl', uri);
+          setImagePreview(uri);
+        }}
+        initialImage={imagePreview || undefined}
       />
-
-      {imagePreview && (
-        <Image source={{ uri: imagePreview }} style={styles.image} />
-      )}
 
       <Button
         title={submitButtonTitle}
         onPress={handleSubmit}
         loading={isLoading}
-        isFullWidth={true}
+        isFullWidth
         style={styles.submitButton}
       />
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    padding: 16,
-  },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: COLORS.border,
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
     fontSize: 16,
   },
   pickerContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     marginBottom: 16,
     gap: 8,
   },
@@ -195,13 +168,6 @@ const styles = StyleSheet.create({
   },
   imageButton: {
     marginVertical: 16,
-  },
-  image: {
-    width: "100%",
-    height: 300,
-    marginBottom: 16,
-    borderRadius: 8,
-    resizeMode: "contain",
   },
   submitButton: {
     marginTop: 8,

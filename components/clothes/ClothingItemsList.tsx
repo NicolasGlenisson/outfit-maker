@@ -1,8 +1,11 @@
+import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Clothing } from "@/types/clothing";
-import { AntDesign } from "@expo/vector-icons";
+
 import ClothingItem from "./ClothingItem";
+
+import { Clothing } from "@/types/clothing";
+import COLORS from "@/theme/colors";
 
 interface ClothingListProps {
   clothes: Clothing[];
@@ -20,7 +23,7 @@ export default function ClothingItemsList({
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={onBackPress}>
-        <AntDesign name="left" size={16} color="#666" />
+        <AntDesign name="left" size={16} color={COLORS.text} />
         <Text style={styles.backButtonText}>Back to Categories</Text>
       </TouchableOpacity>
 
@@ -51,16 +54,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: COLORS.border,
   },
   backButtonText: {
     fontSize: 16,
     marginLeft: 8,
-    color: "#666",
+    color: COLORS.text,
   },
   emptyText: {
     textAlign: "center",
-    color: "#999",
+    color: COLORS.text,
     padding: 20,
   },
 });

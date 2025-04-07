@@ -1,6 +1,8 @@
-import { View, StyleSheet, Image, Text } from "react-native";
-import { Outfit } from "@/types/clothing";
 import { Link } from "expo-router";
+import { View, StyleSheet, Image, Text } from "react-native";
+
+import { Outfit } from "@/types/clothing";
+import COLORS from "@/theme/colors";
 export default function OutfitCard({ outfit }: { outfit: Outfit }) {
   return (
     <View style={styles.container}>
@@ -11,7 +13,7 @@ export default function OutfitCard({ outfit }: { outfit: Outfit }) {
           style={[
             styles.image,
             {
-              backgroundColor: "#f0f0f0",
+              backgroundColor: COLORS.background,
               justifyContent: "center",
               alignItems: "center",
             },
@@ -34,7 +36,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: COLORS.border,
   },
   image: {
     width: "100%",
@@ -47,6 +49,6 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: "#666",
+    color: COLORS.text,
   },
 });

@@ -1,19 +1,12 @@
-import React, { useEffect, useState } from "react";
-import {
-  ScrollView,
-  TextInput,
-  Text,
-  StyleSheet,
-  View,
-  Alert,
-} from "react-native";
-import { OutfitFormData } from "@/types/clothing";
-import { Clothing } from "@/types/clothing";
-import { getClothes } from "@/utils/storage";
-import PhotoPicker from "@/components/PhotoPicker";
-import ClothingPicker from "@/components/ClothingPicker";
-import Button from "@/components/Button";
+import React, { useEffect, useState } from 'react';
+import { Alert, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import ClothingPicker from '@/components/outfits/ClothingPicker';
+import Button from '@/components/ui/Button';
+import PhotoPicker from '@/components/ui/ImagePicker';
+import COLORS from '@/theme/colors';
+import { Clothing, OutfitFormData } from '@/types/clothing';
+import { getClothes } from '@/utils/storage/index';
 interface OutfitFormProps {
   initialData?: Partial<OutfitFormData>;
   onSubmit: (data: OutfitFormData) => Promise<void>;
@@ -24,12 +17,12 @@ interface OutfitFormProps {
 export default function OutfitForm({
   initialData,
   onSubmit,
-  submitButtonTitle = "Create Outfit",
+  submitButtonTitle = 'Create Outfit',
   isLoading = false,
 }: OutfitFormProps) {
   const [clothes, setClothes] = useState<Clothing[]>([]);
   const [formData, setFormData] = useState<OutfitFormData>({
-    name: initialData?.name || "",
+    name: initialData?.name || '',
     imageUrl: initialData?.imageUrl,
     clothes: initialData?.clothes || [],
   });
@@ -72,40 +65,39 @@ export default function OutfitForm({
   const handleSubmit = async () => {
     // Validation checks
     if (!formData.name) {
-      Alert.alert("Error", "Please provide a name for your outfit");
+      Alert.alert('Error', 'Please provide a name for your outfit');
       return;
     }
 
     if (formData.clothes.length === 0) {
-      Alert.alert("Error", "Please select at least one clothing item");
+      Alert.alert('Error', 'Please select at least one clothing item');
       return;
     }
 
     try {
       await onSubmit(formData);
-    } catch (error) {
-      console.error("Error submitting outfit:", error);
-      Alert.alert("Error", "Failed to save outfit. Please try again.");
+    } catch {
+      Alert.alert('Error', 'Failed to save outfit. Please try again.');
     }
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <View style={styles.section}>
         <Text style={styles.label}>Name</Text>
         <TextInput
           style={styles.input}
           value={formData.name}
-          onChangeText={(text) => handleChange("name", text)}
+          onChangeText={(text) => handleChange('name', text)}
           placeholder="Enter outfit name"
         />
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.label}>Photo (Optional)</Text>
+        <Text style={styles.label}>Picture</Text>
         <PhotoPicker
           handleChangeImage={(uri) => {
-            handleChange("imageUrl", uri);
+            handleChange('imageUrl', uri);
             setImagePreview(uri);
           }}
           initialImage={imagePreview || undefined}
@@ -113,7 +105,7 @@ export default function OutfitForm({
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.label}>Select Clothes</Text>
+        <Text style={styles.label}>Clothes</Text>
         <ClothingPicker
           clothes={clothes}
           onSelect={handleSelectClothing}
@@ -127,28 +119,28 @@ export default function OutfitForm({
           onPress={handleSubmit}
           loading={isLoading}
           isFullWidth={true}
-          style={styles.submitButton}
         />
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    marginBottom: 24,
   },
   section: {
     marginBottom: 24,
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: COLORS.border,
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
@@ -156,8 +148,5 @@ const styles = StyleSheet.create({
   submitContainer: {
     marginTop: 16,
     marginBottom: 40,
-  },
-  submitButton: {
-    backgroundColor: "#ffd33d",
   },
 });

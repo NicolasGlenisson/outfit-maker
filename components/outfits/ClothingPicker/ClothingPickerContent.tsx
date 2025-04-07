@@ -1,22 +1,22 @@
-import React, { useCallback } from "react";
+import { AntDesign } from '@expo/vector-icons';
+import React, { useCallback } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
   FlatList,
+  StyleSheet,
+  Text,
   TouchableOpacity,
-  Platform,
-} from "react-native";
-import { Clothing, Category } from "@/types/clothing";
-import { AntDesign } from "@expo/vector-icons";
-import ClothingItem from "@/components/ClothingItem";
-import CategoryItem from "@/components/CategoryItem";
+  View,
+} from 'react-native';
+
+import CategoryItem from '@/components/clothes/CategoryItem';
+import ClothingItem from '@/components/clothes/ClothingItem';
+import COLORS from '@/theme/colors';
+import { Category, Clothing } from '@/types/clothing';
 
 interface ClothingPickerContentProps {
   clothes: Clothing[];
   selectedIds: string[];
   onSelect: (clothing: Clothing) => void;
-  closeBottomSheet: () => void;
   selectedCategory: Category | null;
   setSelectedCategory: (category: Category | null) => void;
 }
@@ -25,7 +25,6 @@ export default function ClothingPickerContent({
   clothes,
   selectedIds,
   onSelect,
-  closeBottomSheet,
   selectedCategory,
   setSelectedCategory,
 }: ClothingPickerContentProps) {
@@ -45,7 +44,7 @@ export default function ClothingPickerContent({
       {/* Header */}
       <View style={styles.sheetHeader}>
         <Text style={styles.sheetTitle}>
-          {selectedCategory ? `Select ${selectedCategory}` : "Select Category"}
+          {selectedCategory ? `Select ${selectedCategory}` : 'Select Category'}
         </Text>
       </View>
 
@@ -76,7 +75,7 @@ export default function ClothingPickerContent({
               style={styles.backButton}
               onPress={() => setSelectedCategory(null)}
             >
-              <AntDesign name="left" size={16} color="#666" />
+              <AntDesign name="left" size={16} color={COLORS.text} />
               <Text style={styles.backButtonText}>Back to Categories</Text>
             </TouchableOpacity>
 
@@ -110,28 +109,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sheetHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: COLORS.border,
   },
   sheetTitle: {
     fontSize: 20,
-    fontWeight: "600",
-    ...Platform.select({
-      ios: {
-        fontWeight: "600",
-      },
-      android: {
-        fontFamily: "sans-serif-medium",
-      },
-      web: {
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      },
-    }),
+    fontWeight: '600',
   },
   closeButton: {
     padding: 4,
@@ -143,25 +131,25 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backButton: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: COLORS.border,
   },
   backButtonText: {
     fontSize: 16,
     marginLeft: 8,
-    color: "#666",
+    color: COLORS.text,
   },
   emptyText: {
-    textAlign: "center",
-    color: "#999",
+    textAlign: 'center',
+    color: COLORS.text,
     padding: 20,
   },
   sheetFooter: {
     padding: 16,
     borderTopWidth: 1,
-    borderTopColor: "#eee",
+    borderTopColor: COLORS.border,
   },
 });

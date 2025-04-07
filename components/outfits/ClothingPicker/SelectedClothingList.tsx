@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+
 import { Clothing } from "@/types/clothing";
+import COLORS from "@/theme/colors";
 
 interface SelectedClothingListProps {
   selectedClothes: Clothing[];
@@ -47,13 +49,13 @@ const styles = StyleSheet.create({
   selectedSection: {
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: COLORS.border,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
     marginBottom: 12,
-    color: "#333",
+    color: COLORS.text,
   },
   selectedItemsContainer: {
     flexDirection: "row",
@@ -69,13 +71,13 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     marginBottom: 4,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: COLORS.background,
   },
   selectedPlaceholder: {
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "#e0e0e0",
+    backgroundColor: COLORS.background,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 4,
@@ -83,7 +85,7 @@ const styles = StyleSheet.create({
   placeholderText: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#999",
+    color: COLORS.text,
   },
   selectedClothingName: {
     fontSize: 12,
@@ -92,7 +94,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     textAlign: "center",
-    color: "#999",
+    color: COLORS.text,
     padding: 20,
   },
 });

@@ -1,11 +1,13 @@
-import LinkButton from "@/components/LinkButton";
-import { SafeAreaView, StyleSheet, View } from "react-native";
-import ClotheList from "@/components/ClotheList";
+import { SafeAreaView, StyleSheet } from "react-native";
+import { COLORS } from "@/theme/colors";
+
+import ClotheList from "@/components/clothes/ClothingList";
+import LinkButton from "@/components/ui/LinkButton";
 
 export default function Index() {
   return (
     <SafeAreaView style={styles.container}>
-      <LinkButton title="Add clothing" href="/clothes/add" isFullWidth={true} />
+      <LinkButton title="Add clothing" href="/clothes/add" isFullWidth />
       <ClotheList />
     </SafeAreaView>
   );
@@ -14,6 +16,6 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.background,
   },
 });

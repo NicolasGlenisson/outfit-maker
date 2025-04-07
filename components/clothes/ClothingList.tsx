@@ -1,16 +1,18 @@
-import { useState, useEffect } from "react";
+import { AntDesign } from '@expo/vector-icons';
+import { Link } from 'expo-router';
+import { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
   FlatList,
-  TouchableOpacity,
   Image,
-} from "react-native";
-import { Clothing, Category } from "@/types/clothing";
-import { getClothes } from "@/utils/storage";
-import { Link } from "expo-router";
-import { AntDesign } from "@expo/vector-icons";
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+
+import COLORS from '@/theme/colors';
+import { Category, Clothing } from '@/types/clothing';
+import { getClothes } from '@/utils/storage/index';
 
 // Interface pour les sections par catégorie
 interface CategorySection {
@@ -47,7 +49,7 @@ export default function ClotheList() {
 
         setCategorySections(sections);
       } catch (error) {
-        console.error("Error loading clothes:", error);
+        console.error('Error loading clothes:', error);
       } finally {
         setLoading(false);
       }
@@ -100,9 +102,9 @@ export default function ClotheList() {
                 </View>
               </View>
               <AntDesign
-                name={item.expanded ? "up" : "down"}
+                name={item.expanded ? 'up' : 'down'}
                 size={20}
-                color="#666"
+                color={COLORS.text}
               />
             </TouchableOpacity>
 
@@ -134,8 +136,8 @@ export default function ClotheList() {
                         <View style={styles.tagsContainer}>
                           {clothing.seasons?.length > 0 && (
                             <Text style={styles.tagLabel}>
-                              {clothing.seasons.slice(0, 2).join(", ")}
-                              {clothing.seasons.length > 2 ? "..." : ""}
+                              {clothing.seasons.slice(0, 2).join(', ')}
+                              {clothing.seasons.length > 2 ? '...' : ''}
                             </Text>
                           )}
                         </View>
@@ -155,112 +157,112 @@ export default function ClotheList() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: "100%",
+    width: '100%',
     padding: 8,
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   emptyContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
   },
   emptyText: {
     fontSize: 16,
-    color: "#666",
+    color: COLORS.text,
   },
   categorySection: {
     marginBottom: 10,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.background,
     borderRadius: 8,
-    overflow: "hidden",
+    overflow: 'hidden',
     borderWidth: 1,
-    borderColor: "#eee",
+    borderColor: '#eee',
   },
   categoryHeader: {
-    backgroundColor: "#f8f8f8",
+    backgroundColor: COLORS.background,
     padding: 12,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   categoryTitleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   categoryTitle: {
     fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
+    fontWeight: '600',
+    color: COLORS.text,
     marginRight: 8,
   },
   counterContainer: {
-    backgroundColor: "#ffd33d",
+    backgroundColor: COLORS.backgroundSecondary,
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 2,
     minWidth: 24,
-    alignItems: "center",
+    alignItems: 'center',
   },
   counter: {
     fontSize: 14,
-    fontWeight: "bold",
-    color: "#333",
+    fontWeight: 'bold',
+    color: COLORS.background,
   },
   clothesList: {
     padding: 8,
   },
   clotheLink: {},
   clotheItem: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 8,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
+    borderBottomColor: COLORS.border,
   },
   clotheImage: {
     width: 40,
     height: 40,
     borderRadius: 4,
     marginRight: 12,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: COLORS.border,
   },
   placeholderImage: {
     width: 40,
     height: 40,
     borderRadius: 4,
     marginRight: 12,
-    backgroundColor: "#e0e0e0",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: COLORS.backgroundSecondary,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   placeholderText: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#999",
+    fontWeight: 'bold',
+    color: COLORS.text,
   },
   clotheDetails: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   clotheName: {
     fontSize: 16,
-    fontWeight: "500",
-    color: "#333",
+    fontWeight: '500',
+    color: COLORS.text,
   },
   tagsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     marginTop: 4,
   },
   tagLabel: {
     fontSize: 12,
-    color: "#666",
-    backgroundColor: "#f0f0f0",
+    color: COLORS.background,
+    backgroundColor: COLORS.primary,
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
@@ -269,7 +271,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    backgroundColor: "#eee",
+    backgroundColor: COLORS.background,
     marginHorizontal: 16,
   },
 });

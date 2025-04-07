@@ -1,7 +1,9 @@
+import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+
 import { Clothing } from "@/types/clothing";
-import { AntDesign } from "@expo/vector-icons";
+import COLORS from "@/theme/colors";
 
 interface ClothingItemProps {
   clothing: Clothing;
@@ -62,7 +64,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
+    borderBottomColor: COLORS.border,
     justifyContent: "space-between",
   },
   selectedItem: {
@@ -83,7 +85,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 4,
-    backgroundColor: "#e0e0e0",
+    backgroundColor: COLORS.backgroundSecondary,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
@@ -91,7 +93,7 @@ const styles = StyleSheet.create({
   placeholderText: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#999",
+    color: COLORS.text,
   },
   clothingDetails: {
     flex: 1,
@@ -99,11 +101,11 @@ const styles = StyleSheet.create({
   clothingName: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#333",
+    color: COLORS.text,
   },
   clothingTags: {
     fontSize: 12,
-    color: "#666",
+    color: COLORS.text,
     marginTop: 4,
   },
   selectionIndicator: {
@@ -117,6 +119,6 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: COLORS.border,
   },
 });

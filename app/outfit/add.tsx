@@ -1,10 +1,12 @@
-import { useState } from "react";
-import { ScrollView, Text, StyleSheet, Alert, View } from "react-native";
-import { OutfitFormData } from "@/types/clothing";
-import OutfitForm from "@/components/OutfitForm";
-import { saveOutfit } from "@/utils/storage";
-import { router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { router, Stack } from 'expo-router';
+import { useState } from 'react';
+import { Alert, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import OutfitForm from '@/components/outfits/OutfitForm';
+import COLORS from '@/theme/colors';
+import { OutfitFormData } from '@/types/clothing';
+import { saveOutfit } from '@/utils/storage/index';
 
 export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,21 +15,26 @@ export default function Page() {
     setIsLoading(true);
     try {
       await saveOutfit(formData);
-      router.push("/outfit");
-    } catch (error) {
-      Alert.alert("Error", "Couldn't save the outfit.");
+      router.push('/outfit');
+    } catch {
+      Alert.alert('Error', "Couldn't save the outfit.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={styles.container}>
+      <Stack.Screen
+        options={{
+          title: 'Add New Outfit',
+          headerStyle: {
+            backgroundColor: COLORS.primary,
+          },
+          headerTintColor: COLORS.background,
+        }}
+      />
       <ScrollView>
-        <View style={styles.header}>
-          <Text style={styles.title}>Add New Outfit</Text>
-        </View>
-
         <OutfitForm onSubmit={handleSubmitForm} isLoading={isLoading} />
       </ScrollView>
     </SafeAreaView>
@@ -37,16 +44,6 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-  },
-  header: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
+    backgroundColor: COLORS.background,
   },
 });

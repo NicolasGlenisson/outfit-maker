@@ -1,7 +1,9 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Category, Clothing } from "@/types/clothing";
+
 import CategoryItem from "./CategoryItem";
+
+import { Category, Clothing } from "@/types/clothing";
 
 interface CategorySelectorProps {
   categories: Category[];
@@ -18,7 +20,7 @@ export default function CategorySelector({
     <View style={styles.container}>
       {categories.map((category) => {
         const categoryClothes = clothes.filter(
-          (clothing) => clothing.category === category
+          (clothing) => clothing.category === category,
         );
         return (
           <CategoryItem

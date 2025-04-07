@@ -46,7 +46,7 @@ export interface Clothing {
 }
 
 // Interface pour le formulaire de création/modification de vêtement
-export type ClothingFormData = Omit<Clothing, 'id' | 'createdAt' | 'updatedAt'>
+export type ClothingFormData = Omit<Clothing, "id" | "createdAt" | "updatedAt">;
 
 // Interface pour une tenue complète
 export interface Outfit {
@@ -59,7 +59,7 @@ export interface Outfit {
 }
 
 // Interface pour le formulaire de outfit
-export type OutfitFormData = Omit<Outfit, 'id' | 'createdAt' | 'updatedAt'>;
+export type OutfitFormData = Omit<Outfit, "id" | "createdAt" | "updatedAt">;
 
 // Interface pour planifier une tenue
 export interface OutfitSchedule {

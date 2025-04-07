@@ -1,7 +1,9 @@
+import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { TouchableOpacity, Text, View, StyleSheet } from "react-native";
+
 import { Category } from "@/types/clothing";
-import { AntDesign } from "@expo/vector-icons";
+import COLORS from "@/theme/colors";
 
 interface CategoryItemProps {
   category: Category;
@@ -31,14 +33,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: COLORS.border,
   },
   categoryOptionText: {
     fontSize: 16,
     flex: 1,
   },
   categoryCountContainer: {
-    backgroundColor: "#ffd33d",
+    backgroundColor: COLORS.primary,
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 2,
@@ -49,6 +51,6 @@ const styles = StyleSheet.create({
   categoryCount: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#333",
+    color: COLORS.background,
   },
 });

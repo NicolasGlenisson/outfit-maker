@@ -1,9 +1,11 @@
 import React, { useState, useCallback } from "react";
 import { View, Text, StyleSheet } from "react-native";
+
+import CategorySelector from "@/components/clothes/CategorySelector";
+import ClothingList from "@/components/clothes/ClothingItemsList";
+import SelectedClothingList from "@/components/outfits/ClothingPicker/SelectedClothingList";
 import { Clothing, Category } from "@/types/clothing";
-import SelectedClothingList from "@/components/SelectedClothingList";
-import CategorySelector from "@/components/CategorySelector";
-import ClothingList from "@/components/ClothingItemsList";
+import COLORS from "@/theme/colors";
 
 interface ClothingPickerProps {
   clothes: Clothing[];
@@ -71,7 +73,7 @@ export default function ClothingPicker({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.background,
   },
   selectionContainer: {
     flex: 1,
