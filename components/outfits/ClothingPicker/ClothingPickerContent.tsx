@@ -86,11 +86,11 @@ export default function ClothingPickerContent({
               renderItem={({ item }) => (
                 <ClothingItem
                   clothing={item}
-                  isSelected={selectedIds.includes(item.id)}
+                  isSelected={selectedIds.includes(item.clientId)}
                   onSelect={onSelect}
                 />
               )}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => item.clientId}
               ListEmptyComponent={() => (
                 <Text style={styles.emptyText}>
                   No clothing items in this category

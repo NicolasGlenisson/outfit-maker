@@ -1,9 +1,9 @@
-import { AntDesign } from "@expo/vector-icons";
-import React from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { AntDesign } from '@expo/vector-icons';
+import React from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Clothing } from "@/types/clothing";
-import COLORS from "@/theme/colors";
+import COLORS from '@/theme/colors';
+import { Clothing } from '@/types/clothing';
 
 interface ClothingItemProps {
   clothing: Clothing;
@@ -20,7 +20,7 @@ export default function ClothingItem({
     <TouchableOpacity
       style={[styles.clothingItem, isSelected && styles.selectedItem]}
       onPress={() => onSelect(clothing)}
-      key={clothing.id}
+      key={clothing.clientId}
     >
       <View style={styles.clothingContent}>
         {clothing.imageUrl ? (
@@ -40,8 +40,8 @@ export default function ClothingItem({
           <Text style={styles.clothingName}>{clothing.name}</Text>
           {clothing.occasions && clothing.occasions.length > 0 && (
             <Text style={styles.clothingTags}>
-              {clothing.occasions.slice(0, 2).join(", ")}
-              {clothing.occasions.length > 2 && "..."}
+              {clothing.occasions.slice(0, 2).join(', ')}
+              {clothing.occasions.length > 2 && '...'}
             </Text>
           )}
         </View>
@@ -60,19 +60,19 @@ export default function ClothingItem({
 
 const styles = StyleSheet.create({
   clothingItem: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 12,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   selectedItem: {
-    backgroundColor: "rgba(76, 175, 80, 0.1)",
+    backgroundColor: 'rgba(76, 175, 80, 0.1)',
   },
   clothingContent: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1,
   },
   clothingImage: {
@@ -86,13 +86,13 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 4,
     backgroundColor: COLORS.backgroundSecondary,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginRight: 12,
   },
   placeholderText: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: COLORS.text,
   },
   clothingDetails: {
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   },
   clothingName: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: '500',
     color: COLORS.text,
   },
   clothingTags: {
@@ -111,8 +111,8 @@ const styles = StyleSheet.create({
   selectionIndicator: {
     width: 24,
     height: 24,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   emptyCircle: {
     width: 20,

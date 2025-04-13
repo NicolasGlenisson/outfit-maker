@@ -48,12 +48,14 @@ export default function OutfitForm({
     setFormData((prev) => {
       // Already selected item?
       if (
-        prev.clothes.some((prevClothing) => prevClothing.id === clothing.id)
+        prev.clothes.some(
+          (prevClothing) => prevClothing.clientId === clothing.clientId
+        )
       ) {
         return {
           ...prev,
           clothes: prev.clothes.filter(
-            (prevClothing) => prevClothing.id !== clothing.id
+            (prevClothing) => prevClothing.clientId !== clothing.clientId
           ),
         };
       }
@@ -109,7 +111,7 @@ export default function OutfitForm({
         <ClothingPicker
           clothes={clothes}
           onSelect={handleSelectClothing}
-          selectedIds={formData.clothes.map((item) => item.id)}
+          selectedIds={formData.clothes.map((item) => item.clientId)}
         />
       </View>
 

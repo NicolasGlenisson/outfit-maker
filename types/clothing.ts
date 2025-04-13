@@ -1,39 +1,39 @@
 // Catégories de vêtements
 export enum Category {
-  TOP = "TOP",
-  BOTTOM = "BOTTOM",
-  DRESS = "DRESS",
-  SHOES = "SHOES",
-  ACCESSORIES = "ACCESSORIES",
-  OUTERWEAR = "OUTERWEAR",
-  UNDERWEAR = "UNDERWEAR",
-  SPORTSWEAR = "SPORTSWEAR",
-  SWIMWEAR = "SWIMWEAR",
-  OTHER = "OTHER",
+  TOP = "top",
+  BOTTOM = "bottom",
+  DRESS = "dress",
+  SHOES = "shoes",
+  ACCESSORIES = "accessories",
+  OUTERWEAR = "outerwear",
+  UNDERWEAR = "underwear",
+  SPORTSWEAR = "sportswear",
+  SWIMWEAR = "swimwear",
+  OTHER = "other",
 }
 
 // Saisons applicables aux vêtements
 export enum Season {
-  SPRING = "SPRING",
-  SUMMER = "SUMMER",
-  AUTUMN = "AUTUMN",
-  WINTER = "WINTER",
+  SPRING = "spring",
+  SUMMER = "summer",
+  AUTUMN = "autumn",
+  WINTER = "winter",
 }
 
 // Occasions d'utilisation des vêtements
 export enum Occasion {
-  CASUAL = "CASUAL",
-  FORMAL = "FORMAL",
-  SPORT = "SPORT",
-  PARTY = "PARTY",
-  WORK = "WORK",
-  HOME = "HOME",
-  TRAVEL = "TRAVEL",
+  CASUAL = "casual",
+  FORMAL = "formal",
+  SPORT = "sport",
+  PARTY = "party",
+  WORK = "work",
+  HOME = "home",
+  TRAVEL = "travel",
 }
 
 // Interface du vêtement
 export interface Clothing {
-  id: string; // Utilisation de string pour UUID ou identifiants uniques sur le frontend
+  clientId: string; // Utilisation de string pour UUID ou identifiants uniques sur le frontend
   name: string;
   category: Category;
   color?: string;
@@ -43,10 +43,11 @@ export interface Clothing {
   occasions: Occasion[];
   createdAt: Date;
   updatedAt: Date;
+  isSynced: boolean;
 }
 
 // Interface pour le formulaire de création/modification de vêtement
-export type ClothingFormData = Omit<Clothing, "id" | "createdAt" | "updatedAt">;
+export type ClothingFormData = Omit<Clothing, "clientId" | "createdAt" | "updatedAt" | "isSynced">;
 
 // Interface pour une tenue complète
 export interface Outfit {
@@ -76,4 +77,16 @@ export interface User {
   email: string;
   name?: string;
   avatarUrl?: string;
+}
+
+export interface ApiResponse<T = unknown> {
+  message: string;
+  data?: T;
+}
+
+export interface UserAPI {
+  _id: string;
+  deviceId: string;
+  createdAt: string;
+  updatedAt: string;
 }

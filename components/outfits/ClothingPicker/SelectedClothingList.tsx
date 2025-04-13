@@ -1,8 +1,8 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import React from 'react';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { Clothing } from "@/types/clothing";
-import COLORS from "@/theme/colors";
+import COLORS from '@/theme/colors';
+import { Clothing } from '@/types/clothing';
 
 interface SelectedClothingListProps {
   selectedClothes: Clothing[];
@@ -18,7 +18,7 @@ export default function SelectedClothingList({
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={styles.selectedItemsContainer}>
             {selectedClothes.map((clothing) => (
-              <View style={styles.selectedClothingItem} key={clothing.id}>
+              <View style={styles.selectedClothingItem} key={clothing.clientId}>
                 {clothing.imageUrl ? (
                   <Image
                     source={{ uri: clothing.imageUrl }}
@@ -53,16 +53,16 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 12,
     color: COLORS.text,
   },
   selectedItemsContainer: {
-    flexDirection: "row",
-    flexWrap: "nowrap",
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
   },
   selectedClothingItem: {
-    alignItems: "center",
+    alignItems: 'center',
     marginRight: 16,
     width: 80,
   },
@@ -78,22 +78,22 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     backgroundColor: COLORS.background,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 4,
   },
   placeholderText: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: COLORS.text,
   },
   selectedClothingName: {
     fontSize: 12,
-    textAlign: "center",
+    textAlign: 'center',
     maxWidth: 80,
   },
   emptyText: {
-    textAlign: "center",
+    textAlign: 'center',
     color: COLORS.text,
     padding: 20,
   },

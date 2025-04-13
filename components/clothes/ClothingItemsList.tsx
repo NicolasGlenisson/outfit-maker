@@ -1,11 +1,11 @@
-import { AntDesign } from "@expo/vector-icons";
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { AntDesign } from '@expo/vector-icons';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import ClothingItem from "./ClothingItem";
+import ClothingItem from './ClothingItem';
 
-import { Clothing } from "@/types/clothing";
-import COLORS from "@/theme/colors";
+import COLORS from '@/theme/colors';
+import { Clothing } from '@/types/clothing';
 
 interface ClothingListProps {
   clothes: Clothing[];
@@ -33,9 +33,9 @@ export default function ClothingItemsList({
         <View>
           {clothes.map((item) => (
             <ClothingItem
-              key={item.id}
+              key={item.clientId}
               clothing={item}
-              isSelected={selectedIds.includes(item.id)}
+              isSelected={selectedIds.includes(item.clientId)}
               onSelect={onSelect}
             />
           ))}
@@ -50,8 +50,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backButton: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     color: COLORS.text,
   },
   emptyText: {
-    textAlign: "center",
+    textAlign: 'center',
     color: COLORS.text,
     padding: 20,
   },

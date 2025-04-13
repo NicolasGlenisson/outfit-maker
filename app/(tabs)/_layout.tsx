@@ -1,6 +1,7 @@
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Tabs } from "expo-router";
 import { COLORS } from "@/theme/colors";
+import SyncButton from "@/components/syncButton";
 
 export default function TabLayout() {
   return (
@@ -16,6 +17,7 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: COLORS.primary,
         },
+        headerRight: () => <SyncButton />,
       }}
     >
       <Tabs.Screen

@@ -10,6 +10,7 @@ import { Clothing, ClothingFormData, Outfit } from "@/types/clothing";
  */
 export const saveClothing = async (
   clothingData: ClothingFormData,
+  clientId?: string,
 ): Promise<Clothing> => {
   try {
     // get existing clothes
@@ -18,9 +19,10 @@ export const saveClothing = async (
     // Create a new clothe
     const newClothing: Clothing = {
       ...clothingData,
-      id: uuid.v4().toString(),
+      clientId: clientId || uuid.v4().toString(), // On peut set nous meme le clientId si on synchro depuis le cloud
       createdAt: new Date(),
       updatedAt: new Date(),
+      isSynced: false,
     };
 
     // Add the new clothing to the list
@@ -66,7 +68,7 @@ export const getClothes = async (): Promise<Clothing[]> => {
 export const getClothingById = async (id: string): Promise<Clothing | null> => {
   try {
     const clothes = await getClothes();
-    const clothing = clothes.find((item) => item.id === id);
+    const clothing = clothes.find((item) => item.clientId === id);
     return clothing || null;
   } catch (error) {
     console.error("Error retrieving clothing:", error);
@@ -83,7 +85,7 @@ export const updateClothing = async (
 ): Promise<Clothing | null> => {
   try {
     const clothes = await getClothes();
-    const clothingIndex = clothes.findIndex((item) => item.id === id);
+    const clothingIndex = clothes.findIndex((item) => item.clientId === id);
 
     if (clothingIndex === -1) return null;
 
@@ -92,6 +94,7 @@ export const updateClothing = async (
       ...clothes[clothingIndex],
       ...updatedData,
       updatedAt: new Date(),
+      isSynced: false,
     };
 
     clothes[clothingIndex] = updatedClothing;
@@ -113,7 +116,7 @@ export const deleteClothing = async (id: string): Promise<boolean> => {
   try {
     // Delete the clothing
     const clothes = await getClothes();
-    const updatedClothes = clothes.filter((item) => item.id !== id);
+    const updatedClothes = clothes.filter((item) => item.clientId !== id);
 
     if (updatedClothes.length === clothes.length) {
       return false; // Clothing not found
@@ -130,7 +133,7 @@ export const deleteClothing = async (id: string): Promise<boolean> => {
       const outfits = JSON.parse(outfitsJson);
       const updatedOutfits = outfits.map((outfit: Outfit) => ({
         ...outfit,
-        clothes: outfit.clothes.filter((clothing: Clothing) => clothing.id !== id)
+        clothes: outfit.clothes.filter((clothing: Clothing) => clothing.clientId !== id)
       }));
       
       await AsyncStorage.setItem(

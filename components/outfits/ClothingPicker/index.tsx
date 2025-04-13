@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useCallback, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
-import CategorySelector from "@/components/clothes/CategorySelector";
-import ClothingList from "@/components/clothes/ClothingItemsList";
-import SelectedClothingList from "@/components/outfits/ClothingPicker/SelectedClothingList";
-import { Clothing, Category } from "@/types/clothing";
-import COLORS from "@/theme/colors";
+import CategorySelector from '@/components/clothes/CategorySelector';
+import ClothingList from '@/components/clothes/ClothingItemsList';
+import SelectedClothingList from '@/components/outfits/ClothingPicker/SelectedClothingList';
+import COLORS from '@/theme/colors';
+import { Category, Clothing } from '@/types/clothing';
 
 interface ClothingPickerProps {
   clothes: Clothing[];
@@ -25,7 +25,7 @@ export default function ClothingPicker({
 
   // Get selected clothes
   const selectedClothes = clothes.filter((item) =>
-    selectedIds.includes(item.id)
+    selectedIds.includes(item.clientId)
   );
 
   // Get all categories that have clothes
@@ -44,7 +44,7 @@ export default function ClothingPicker({
       {/* Category or Clothing List */}
       <View style={styles.selectionContainer}>
         <Text style={styles.sectionHeader}>
-          {selectedCategory ? `Select ${selectedCategory}` : "Select Category"}
+          {selectedCategory ? `Select ${selectedCategory}` : 'Select Category'}
         </Text>
 
         {!selectedCategory ? (
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 12,
     paddingHorizontal: 16,
   },

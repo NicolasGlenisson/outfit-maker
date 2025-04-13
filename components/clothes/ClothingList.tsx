@@ -1,6 +1,8 @@
+import { syncEmitter } from '@/utils/api/user';
 import { AntDesign } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
+
 import {
   FlatList,
   Image,
@@ -54,8 +56,12 @@ export default function ClotheList() {
         setLoading(false);
       }
     };
-
     loadClothes();
+    syncEmitter.on('clothes-updated', loadClothes);
+
+    return () => {
+      syncEmitter.off('clothes-updated', loadClothes);
+    };
   }, []);
 
   // Fonction pour basculer l'état d'expansion d'une section
@@ -113,8 +119,8 @@ export default function ClotheList() {
               <View style={styles.clothesList}>
                 {item.clothes.map((clothing) => (
                   <Link
-                    href={`/clothes/${clothing.id}`}
-                    key={clothing.id}
+                    href={`/clothes/${clothing.clientId}`}
+                    key={clothing.clientId}
                     style={styles.clotheLink}
                   >
                     <View style={styles.clotheItem}>

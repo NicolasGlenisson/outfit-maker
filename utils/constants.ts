@@ -4,8 +4,6 @@ export const STORAGE_KEYS = {
   AUTH_TOKEN: "outfit-app-auth-token",
 };
 
-export const API_BASE_URL = "http://localhost:5000/api";
-
 export const DEFAULT_PAGINATION_LIMIT = 20;
 
 export const IMAGE_SIZES = {
