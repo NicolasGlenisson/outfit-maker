@@ -6,24 +6,22 @@ import { syncClothing } from './clothes';
 import { EventEmitter } from 'events';
 export const syncEmitter = new EventEmitter();
 
-
-
 /**
  * Récupère l'identifiant unique du téléphone selon la plateforme
  */
 const getDeviceId = async (): Promise<string> => {
   let deviceId = '';
-  
+
   if (Platform.OS === 'android') {
     deviceId = Application.getAndroidId() ?? '';
   } else if (Platform.OS === 'ios') {
-    deviceId = await Application.getIosIdForVendorAsync() ?? '';
+    deviceId = (await Application.getIosIdForVendorAsync()) ?? '';
   }
-  
+
   if (!deviceId) {
     throw new Error('No Device ID');
   }
-  
+
   return deviceId;
 };
 
@@ -31,18 +29,20 @@ const getDeviceId = async (): Promise<string> => {
  * Vérifie si un utilisateur existe déjà dans l'API avec l'ID de l'appareil
  */
 const checkExistingUser = async (deviceId: string) => {
-
   try {
-    const response = await axios.get(`${process.env.EXPO_PUBLIC_API_URL}/api/user/${deviceId}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    
+    const response = await axios.get(
+      `${process.env.EXPO_PUBLIC_API_URL}/api/user/${deviceId}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
     if (response.status === 200) {
       return response.data;
     }
-    
+
     return null;
   } catch (error) {
     return null;
@@ -53,16 +53,20 @@ const checkExistingUser = async (deviceId: string) => {
  * Crée un nouvel utilisateur dans l'API avec l'ID de l'appareil
  */
 const createUser = async (deviceId: string) => {
-  const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/api/user/create`, { deviceId }, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  
+  const response = await axios.post(
+    `${process.env.EXPO_PUBLIC_API_URL}/api/user/create`,
+    { deviceId },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
   if (response.status !== 201) {
     throw new Error(`Erreur API: ${response.status}`);
   }
-  
+
   console.log('User créé avec succès:', response.data);
   return response.data;
 };
@@ -73,13 +77,13 @@ const createUser = async (deviceId: string) => {
 const getDeviceUser = async () => {
   try {
     const deviceId = await getDeviceId();
-    
+
     // Vérifie si un user existe déjà
     const existingUser = await checkExistingUser(deviceId);
     if (existingUser) {
       return existingUser;
     }
-    
+
     // Si l'utilisateur n'existe pas, on le crée
     return await createUser(deviceId);
   } catch (error) {
@@ -101,24 +105,23 @@ export const syncUser = async () => {
 
     syncEmitter.emit('clothes-updated');
     return {
-      message: "Synchronisé",
+      message: 'Synchronisé',
       data: user,
     };
   } catch (error) {
     console.error('Échec de la synchronisation utilisateur:', error);
     return {
-      message: "Erreur de synchro",
+      message: 'Erreur de synchro',
     };
   }
 };
-
 
 // const syncClothing = async (user: UserAPI) => {
 //   try {
 //     const response: ApiResponse = await getClothes(user);
 
 //     const clothesData = await getClothesLocal();
-  
+
 //     console.log(response.data, clothesData);
 //     // clothesData.forEach( async(clothing) => {
 //     //   await createClothes(user, clothing);
@@ -127,5 +130,3 @@ export const syncUser = async () => {
 //     throw error;
 //   }
 // }
-
-

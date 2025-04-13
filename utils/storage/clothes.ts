@@ -1,16 +1,16 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import uuid from "react-native-uuid";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import uuid from 'react-native-uuid';
 
-import { STORAGE_KEYS } from "../constants";
+import { STORAGE_KEYS } from '../constants';
 
-import { Clothing, ClothingFormData, Outfit } from "@/types/clothing";
+import { Clothing, ClothingFormData, Outfit } from '@/types/clothing';
 
 /**
  * Save multiple clothing items in local storage
  */
 export const saveClothing = async (
   clothingData: ClothingFormData | ClothingFormData[],
-  clientId?: string,
+  clientId?: string
 ): Promise<Clothing | Clothing[]> => {
   try {
     // get existing clothes
@@ -19,7 +19,7 @@ export const saveClothing = async (
     // Check if we're dealing with a single item or an array
     const isArray = Array.isArray(clothingData);
     const clothingArray = isArray ? clothingData : [clothingData];
-    
+
     // Create new clothing items
     const newClothingItems: Clothing[] = clothingArray.map((item) => ({
       ...item,
@@ -35,14 +35,14 @@ export const saveClothing = async (
     // Save to storage
     await AsyncStorage.setItem(
       STORAGE_KEYS.CLOTHES,
-      JSON.stringify(updatedClothes),
+      JSON.stringify(updatedClothes)
     );
 
     // Return either a single clothing item or the array based on what was passed in
     return isArray ? newClothingItems : newClothingItems[0];
   } catch (error) {
-    console.error("Error saving clothing:", error);
-    throw new Error("Could not save clothing");
+    console.error('Error saving clothing:', error);
+    throw new Error('Could not save clothing');
   }
 };
 
@@ -62,7 +62,7 @@ export const getClothes = async (): Promise<Clothing[]> => {
       updatedAt: new Date(item.updatedAt),
     }));
   } catch (error) {
-    console.error("Error retrieving clothes:", error);
+    console.error('Error retrieving clothes:', error);
     return [];
   }
 };
@@ -76,7 +76,7 @@ export const getClothingById = async (id: string): Promise<Clothing | null> => {
     const clothing = clothes.find((item) => item.clientId === id);
     return clothing || null;
   } catch (error) {
-    console.error("Error retrieving clothing:", error);
+    console.error('Error retrieving clothing:', error);
     return null;
   }
 };
@@ -85,12 +85,14 @@ export const getClothingById = async (id: string): Promise<Clothing | null> => {
  * Update an existing clothing item
  */
 export const updateClothing = async (
-  id: string,
-  updatedData: Partial<ClothingFormData>,
+  clientId: string,
+  updatedData: Partial<ClothingFormData>
 ): Promise<Clothing | null> => {
   try {
     const clothes = await getClothes();
-    const clothingIndex = clothes.findIndex((item) => item.clientId === id);
+    const clothingIndex = clothes.findIndex(
+      (item) => item.clientId === clientId
+    );
 
     if (clothingIndex === -1) return null;
 
@@ -109,7 +111,7 @@ export const updateClothing = async (
 
     return updatedClothing;
   } catch (error) {
-    console.error("Error updating clothing:", error);
+    console.error('Error updating clothing:', error);
     return null;
   }
 };
@@ -129,7 +131,7 @@ export const deleteClothing = async (id: string): Promise<boolean> => {
 
     await AsyncStorage.setItem(
       STORAGE_KEYS.CLOTHES,
-      JSON.stringify(updatedClothes),
+      JSON.stringify(updatedClothes)
     );
 
     // Update outfits that contain this clothing item
@@ -138,18 +140,20 @@ export const deleteClothing = async (id: string): Promise<boolean> => {
       const outfits = JSON.parse(outfitsJson);
       const updatedOutfits = outfits.map((outfit: Outfit) => ({
         ...outfit,
-        clothes: outfit.clothes.filter((clothing: Clothing) => clothing.clientId !== id)
+        clothes: outfit.clothes.filter(
+          (clothing: Clothing) => clothing.clientId !== id
+        ),
       }));
-      
+
       await AsyncStorage.setItem(
         STORAGE_KEYS.OUTFITS,
-        JSON.stringify(updatedOutfits),
+        JSON.stringify(updatedOutfits)
       );
     }
 
     return true;
   } catch (error) {
-    console.error("Error deleting clothing:", error);
+    console.error('Error deleting clothing:', error);
     return false;
   }
 };
@@ -158,13 +162,13 @@ export const deleteClothing = async (id: string): Promise<boolean> => {
  * Get clothes by category
  */
 export const getClothesByCategory = async (
-  category: string,
+  category: string
 ): Promise<Clothing[]> => {
   try {
     const clothes = await getClothes();
     return clothes.filter((item) => item.category === category);
   } catch (error) {
-    console.error("Error retrieving clothes by category:", error);
+    console.error('Error retrieving clothes by category:', error);
     return [];
   }
 };
