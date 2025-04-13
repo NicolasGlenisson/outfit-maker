@@ -137,13 +137,29 @@ const sendToCloud = async(user:UserAPI, localClothes: Clothing[]) => {
 }
 
 const copyFromCloud = async(user:UserAPI, cloudClothes: Clothing[]) => {
-
   try {
-    cloudClothes.forEach( async(cloudClothing) => {
-      await saveClothing(cloudClothing, cloudClothing.clientId);
-    })
+    // If there are no cloud clothes to copy, return early
+    if (cloudClothes.length === 0) return;
+    
+    // We can now pass all the clothing items at once
+    const clothingDataArray = cloudClothes.map(cloudClothing => ({
+      name: cloudClothing.name,
+      category: cloudClothing.category,
+      color: cloudClothing.color,
+      brand: cloudClothing.brand,
+      imageUrl: cloudClothing.imageUrl,
+      seasons: cloudClothing.seasons,
+      occasions: cloudClothing.occasions,
+    }));
+    
+    // Create client IDs array matching the order of clothingDataArray
+    const clientIds = cloudClothes.map(item => item.clientId);
+    
+    // Save all clothing items in a batch, preserving the client IDs
+    for (let i = 0; i < clothingDataArray.length; i++) {
+      await saveClothing(clothingDataArray[i], clientIds[i]);
+    }
   } catch (error) {
     throw error;
   }
-
 }

@@ -1,9 +1,10 @@
 import { syncEmitter } from '@/utils/api/user';
 import { AntDesign } from '@expo/vector-icons';
-import { Link } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { Link, useLocalSearchParams } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
 
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   StyleSheet,
@@ -24,45 +25,61 @@ interface CategorySection {
 }
 
 export default function ClotheList() {
+  const { refresh } = useLocalSearchParams();
   const [clothes, setClothes] = useState<Clothing[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [categorySections, setCategorySections] = useState<CategorySection[]>(
     []
   );
 
+  // Déplacer loadClothes à l'extérieur du useEffect pour pouvoir l'utiliser dans d'autres fonctions
+  const loadClothes = useCallback(async () => {
+    try {
+      setRefreshing(true);
+      const clothesData = await getClothes();
+      setClothes(clothesData);
+
+      // Grouper les vêtements par catégorie
+      const categories = Object.values(Category);
+      const sections: CategorySection[] = categories
+        .map((category) => ({
+          category,
+          clothes: clothesData.filter(
+            (clothing) => clothing.category === category
+          ),
+          expanded: false, // Toutes les sections sont fermées par défaut
+        }))
+        .filter((section) => section.clothes.length > 0); // Ne garder que les catégories avec des vêtements
+
+      setCategorySections(sections);
+    } catch (error) {
+      console.error('Error loading clothes:', error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
+  // Effet pour la mise à jour initiale et lors de la réception d'un événement de synchronisation
   useEffect(() => {
-    // Get clothes from storage
-    const loadClothes = async () => {
-      try {
-        const clothesData = await getClothes();
-        setClothes(clothesData);
-
-        // Grouper les vêtements par catégorie
-        const categories = Object.values(Category);
-        const sections: CategorySection[] = categories
-          .map((category) => ({
-            category,
-            clothes: clothesData.filter(
-              (clothing) => clothing.category === category
-            ),
-            expanded: false, // Toutes les sections sont fermées par défaut
-          }))
-          .filter((section) => section.clothes.length > 0); // Ne garder que les catégories avec des vêtements
-
-        setCategorySections(sections);
-      } catch (error) {
-        console.error('Error loading clothes:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
     loadClothes();
+
+    // Écouter l'événement de mise à jour
     syncEmitter.on('clothes-updated', loadClothes);
 
+    // Nettoyer l'écouteur quand le composant est démonté
     return () => {
       syncEmitter.off('clothes-updated', loadClothes);
     };
-  }, []);
+  }, [loadClothes]);
+
+  // Effet supplémentaire pour recharger les données lorsque le paramètre refresh change
+  useEffect(() => {
+    if (refresh) {
+      loadClothes();
+    }
+  }, [refresh, loadClothes]);
 
   // Fonction pour basculer l'état d'expansion d'une section
   const toggleSection = (index: number) => {
@@ -76,7 +93,17 @@ export default function ClotheList() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Text>Loading clothes...</Text>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+        <Text style={styles.loadingText}>Loading clothes...</Text>
+      </View>
+    );
+  }
+
+  if (refreshing) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="small" color={COLORS.primary} />
+        <Text style={styles.loadingText}>Refreshing...</Text>
       </View>
     );
   }
@@ -170,6 +197,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    color: COLORS.text,
+    marginTop: 8,
   },
   emptyContainer: {
     flex: 1,

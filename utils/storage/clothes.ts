@@ -6,27 +6,31 @@ import { STORAGE_KEYS } from "../constants";
 import { Clothing, ClothingFormData, Outfit } from "@/types/clothing";
 
 /**
- * Save a new clothing item in local storage
+ * Save multiple clothing items in local storage
  */
 export const saveClothing = async (
-  clothingData: ClothingFormData,
+  clothingData: ClothingFormData | ClothingFormData[],
   clientId?: string,
-): Promise<Clothing> => {
+): Promise<Clothing | Clothing[]> => {
   try {
     // get existing clothes
     const existingClothes = await getClothes();
 
-    // Create a new clothe
-    const newClothing: Clothing = {
-      ...clothingData,
+    // Check if we're dealing with a single item or an array
+    const isArray = Array.isArray(clothingData);
+    const clothingArray = isArray ? clothingData : [clothingData];
+    
+    // Create new clothing items
+    const newClothingItems: Clothing[] = clothingArray.map((item) => ({
+      ...item,
       clientId: clientId || uuid.v4().toString(), // On peut set nous meme le clientId si on synchro depuis le cloud
       createdAt: new Date(),
       updatedAt: new Date(),
       isSynced: false,
-    };
+    }));
 
-    // Add the new clothing to the list
-    const updatedClothes = [...existingClothes, newClothing];
+    // Add the new clothing items to the list
+    const updatedClothes = [...existingClothes, ...newClothingItems];
 
     // Save to storage
     await AsyncStorage.setItem(
@@ -34,7 +38,8 @@ export const saveClothing = async (
       JSON.stringify(updatedClothes),
     );
 
-    return newClothing;
+    // Return either a single clothing item or the array based on what was passed in
+    return isArray ? newClothingItems : newClothingItems[0];
   } catch (error) {
     console.error("Error saving clothing:", error);
     throw new Error("Could not save clothing");
