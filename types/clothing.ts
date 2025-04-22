@@ -1,34 +1,34 @@
 // Catégories de vêtements
 export enum Category {
-  TOP = "top",
-  BOTTOM = "bottom",
-  DRESS = "dress",
-  SHOES = "shoes",
-  ACCESSORIES = "accessories",
-  OUTERWEAR = "outerwear",
-  UNDERWEAR = "underwear",
-  SPORTSWEAR = "sportswear",
-  SWIMWEAR = "swimwear",
-  OTHER = "other",
+  TOP = 'top',
+  BOTTOM = 'bottom',
+  DRESS = 'dress',
+  SHOES = 'shoes',
+  ACCESSORIES = 'accessories',
+  OUTERWEAR = 'outerwear',
+  UNDERWEAR = 'underwear',
+  SPORTSWEAR = 'sportswear',
+  SWIMWEAR = 'swimwear',
+  OTHER = 'other',
 }
 
 // Saisons applicables aux vêtements
 export enum Season {
-  SPRING = "spring",
-  SUMMER = "summer",
-  AUTUMN = "autumn",
-  WINTER = "winter",
+  SPRING = 'spring',
+  SUMMER = 'summer',
+  AUTUMN = 'autumn',
+  WINTER = 'winter',
 }
 
 // Occasions d'utilisation des vêtements
 export enum Occasion {
-  CASUAL = "casual",
-  FORMAL = "formal",
-  SPORT = "sport",
-  PARTY = "party",
-  WORK = "work",
-  HOME = "home",
-  TRAVEL = "travel",
+  CASUAL = 'casual',
+  FORMAL = 'formal',
+  SPORT = 'sport',
+  PARTY = 'party',
+  WORK = 'work',
+  HOME = 'home',
+  TRAVEL = 'travel',
 }
 
 // Interface du vêtement
@@ -44,10 +44,14 @@ export interface Clothing {
   createdAt: Date;
   updatedAt: Date;
   isSynced: boolean;
+  isDeleted?: boolean;
 }
 
 // Interface pour le formulaire de création/modification de vêtement
-export type ClothingFormData = Omit<Clothing, "clientId" | "createdAt" | "updatedAt" | "isSynced">;
+export type ClothingFormData = Omit<
+  Clothing,
+  'clientId' | 'createdAt' | 'updatedAt' | 'isSynced'
+>;
 
 // Interface pour une tenue complète
 export interface Outfit {
@@ -60,7 +64,7 @@ export interface Outfit {
 }
 
 // Interface pour le formulaire de outfit
-export type OutfitFormData = Omit<Outfit, "id" | "createdAt" | "updatedAt">;
+export type OutfitFormData = Omit<Outfit, 'id' | 'createdAt' | 'updatedAt'>;
 
 // Interface pour planifier une tenue
 export interface OutfitSchedule {

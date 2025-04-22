@@ -14,8 +14,8 @@ import ClothingForm from '@/components/clothes/ClothingForm';
 import Button from '@/components/ui/Button';
 import { Clothing, ClothingFormData } from '@/types/clothing';
 import {
-  deleteClothing,
   getClothingById,
+  tagDelete,
   updateClothing,
 } from '@/utils/storage/index';
 
@@ -80,7 +80,7 @@ export default function Page() {
           style: 'destructive',
           onPress: async () => {
             try {
-              await deleteClothing(id);
+              await tagDelete(id);
               Alert.alert('Success', 'Clothing item deleted', [
                 { text: 'OK', onPress: () => router.replace('/') },
               ]);

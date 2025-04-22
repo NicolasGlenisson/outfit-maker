@@ -49,18 +49,22 @@ export const saveClothing = async (
 /**
  * Retrieve all clothing items
  */
-export const getClothes = async (): Promise<Clothing[]> => {
+export const getClothes = async (
+  getDeleted: boolean = false
+): Promise<Clothing[]> => {
   try {
     const clothesJson = await AsyncStorage.getItem(STORAGE_KEYS.CLOTHES);
     if (!clothesJson) return [];
 
     // Convert dates from string to Date
     const clothes: Clothing[] = JSON.parse(clothesJson);
-    return clothes.map((item) => ({
-      ...item,
-      createdAt: new Date(item.createdAt),
-      updatedAt: new Date(item.updatedAt),
-    }));
+    return clothes
+      .filter((item) => getDeleted || !item.isDeleted) // Don't display clothing tagged as deleted unless specified
+      .map((item) => ({
+        ...item,
+        createdAt: new Date(item.createdAt),
+        updatedAt: new Date(item.updatedAt),
+      }));
   } catch (error) {
     console.error('Error retrieving clothes:', error);
     return [];
@@ -72,7 +76,7 @@ export const getClothes = async (): Promise<Clothing[]> => {
  */
 export const getClothingById = async (id: string): Promise<Clothing | null> => {
   try {
-    const clothes = await getClothes();
+    const clothes = await getClothes(true);
     const clothing = clothes.find((item) => item.clientId === id);
     return clothing || null;
   } catch (error) {
@@ -122,7 +126,7 @@ export const updateClothing = async (
 export const deleteClothing = async (id: string): Promise<boolean> => {
   try {
     // Delete the clothing
-    const clothes = await getClothes();
+    const clothes = await getClothes(true);
     const updatedClothes = clothes.filter((item) => item.clientId !== id);
 
     if (updatedClothes.length === clothes.length) {
@@ -154,6 +158,22 @@ export const deleteClothing = async (id: string): Promise<boolean> => {
     return true;
   } catch (error) {
     console.error('Error deleting clothing:', error);
+    return false;
+  }
+};
+
+export const tagDelete = async (id: string): Promise<boolean> => {
+  try {
+    const clothing = await getClothingById(id);
+    if (!clothing) {
+      throw new Error("Clothing doesn't exist");
+    }
+    clothing.isDeleted = true;
+
+    await updateClothing(id, clothing);
+
+    return true;
+  } catch (error) {
     return false;
   }
 };

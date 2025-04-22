@@ -1,5 +1,9 @@
 import { ApiResponse, Clothing, UserAPI } from '@/types/clothing';
-import { updateClothing as updateClothingLocal } from '@/utils/storage/clothes';
+import {
+  deleteClothing as deleteClothingLocal,
+  getClothingById,
+  updateClothing as updateClothingLocal,
+} from '@/utils/storage/clothes';
 import {
   getClothes as getClothesLocal,
   saveClothing,
@@ -28,6 +32,20 @@ const createClothes = async (user: UserAPI, clothing: Clothing) => {
     );
     return {
       message: 'Clothing créé',
+      data: response,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteClothing = async (user: UserAPI, clientId: string) => {
+  try {
+    const response = await axios.delete(
+      `${process.env.EXPO_PUBLIC_API_URL}/api/clothing/client/${clientId}`
+    );
+    return {
+      message: 'Clothing deleted',
       data: response,
     };
   } catch (error) {
@@ -111,7 +129,12 @@ export const syncClothing = async (user: UserAPI) => {
 
     // Catégoriser les vêtements avec la fonction dédiée
     const syncStatus = categorizeClothes(localClothes, cloudClothes);
-
+    // Log the count of items in each category
+    console.log(`Synchronisation - Stats:
+      - Articles uniquement en local: ${syncStatus.localOnly.length}
+      - Articles uniquement sur le cloud: ${syncStatus.cloudOnly.length}
+      - Articles présents aux deux endroits: ${syncStatus.bothSources.length}
+    `);
     // Créer les vêtements localOnly sur le cloud
     await sendToCloud(user, syncStatus.localOnly);
 
@@ -146,6 +169,7 @@ const copyFromCloud = async (user: UserAPI, cloudClothes: Clothing[]) => {
 
     // We can now pass all the clothing items at once
     const clothingDataArray = cloudClothes.map((cloudClothing) => ({
+      clientId: cloudClothing.clientId,
       name: cloudClothing.name,
       category: cloudClothing.category,
       color: cloudClothing.color,
@@ -160,7 +184,21 @@ const copyFromCloud = async (user: UserAPI, cloudClothes: Clothing[]) => {
 
     // Save all clothing items in a batch, preserving the client IDs
     for (let i = 0; i < clothingDataArray.length; i++) {
-      await saveClothing(clothingDataArray[i], clientIds[i]);
+      const clothingId = clothingDataArray[i].clientId;
+      // Check if clothing already exits locally and is tagged as deleted
+      const localClothing = await getClothingById(clothingId);
+      console.log(JSON.stringify(localClothing));
+      if (localClothing?.isDeleted) {
+        console.log('deleteLocal');
+        const isDeletedLocally = await deleteClothingLocal(clothingId);
+        // Then we delete on cloud
+        if (isDeletedLocally) {
+          await deleteClothing(user, clothingId);
+          console.log('delete cloud');
+        }
+      } else {
+        await saveClothing(clothingDataArray[i], clientIds[i]);
+      }
     }
   } catch (error) {
     throw error;
