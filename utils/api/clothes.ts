@@ -16,7 +16,7 @@ export const getClothes = async (user: UserAPI) => {
     );
     return {
       data: response.data as Clothing[],
-      message: 'Trouvé',
+      message: 'Found',
     };
   } catch (error) {
     throw error;
@@ -31,7 +31,7 @@ const createClothes = async (user: UserAPI, clothing: Clothing) => {
       body
     );
     return {
-      message: 'Clothing créé',
+      message: 'Clothing created',
       data: response,
     };
   } catch (error) {
@@ -54,7 +54,7 @@ const deleteClothing = async (user: UserAPI, clientId: string) => {
 };
 
 /**
- * Structure pour classer les vêtements selon leur présence
+ * Structure to classify clothing items by presence
  */
 interface SyncStatus {
   localOnly: Clothing[];
@@ -66,23 +66,23 @@ interface SyncStatus {
 }
 
 /**
- * Catégorise les vêtements selon leur présence en local ou dans le cloud
- * @param localClothes Liste des vêtements locaux
- * @param cloudClothes Liste des vêtements du cloud
- * @returns Structure organisée des vêtements par catégorie
+ * Categorizes clothing items based on their presence in local storage or cloud
+ * @param localClothes List of local clothing items
+ * @param cloudClothes List of cloud clothing items
+ * @returns Organized structure of clothing items by category
  */
 export const categorizeClothes = (
   localClothes: Clothing[],
   cloudClothes: Clothing[]
 ): SyncStatus => {
-  // Initialiser la structure
+  // Initialize structure
   const syncStatus: SyncStatus = {
     localOnly: [],
     cloudOnly: [],
     bothSources: [],
   };
 
-  // Map pour accéder rapidement aux vêtements du cloud par leur identifiant client
+  // Map for quick access to cloud clothing items by their client identifier
   const cloudClothesMap = new Map();
   cloudClothes.forEach((cloudItem: Clothing) => {
     if (cloudItem.clientId) {
@@ -90,25 +90,25 @@ export const categorizeClothes = (
     }
   });
 
-  // Parcourir les vêtements locaux et les classer
+  // Loop through local clothing items and classify them
   localClothes.forEach((localItem: Clothing) => {
     const matchingCloudItem = cloudClothesMap.get(localItem.clientId);
 
     if (matchingCloudItem) {
-      // Présent dans les deux sources
+      // Present in both sources
       syncStatus.bothSources.push({
         local: localItem,
         cloud: matchingCloudItem,
       });
-      // Retirer l'élément de la map pour identifier les éléments uniquement cloud après
+      // Remove the item from the map to identify cloud-only items later
       cloudClothesMap.delete(localItem.clientId);
     } else {
-      // Présent uniquement en local
+      // Present only in local storage
       syncStatus.localOnly.push(localItem);
     }
   });
 
-  // Les éléments restants dans la map sont uniquement présents dans le cloud
+  // Remaining items in the map are only present in the cloud
   cloudClothesMap.forEach((cloudItem) => {
     syncStatus.cloudOnly.push(cloudItem);
   });
@@ -117,9 +117,9 @@ export const categorizeClothes = (
 };
 
 /**
- * Synchronise les vêtements entre la base de données locale et le serveur
- * @param user Utilisateur actuel
- * @returns Résultat de la synchronisation
+ * Synchronizes clothing items between local database and server
+ * @param user Current user
+ * @returns Synchronization result
  */
 export const syncClothing = async (user: UserAPI) => {
   try {
@@ -127,27 +127,27 @@ export const syncClothing = async (user: UserAPI) => {
     const cloudClothes = response.data || [];
     const localClothes = await getClothesLocal();
 
-    // Catégoriser les vêtements avec la fonction dédiée
+    // Categorize clothing items with the dedicated function
     const syncStatus = categorizeClothes(localClothes, cloudClothes);
     // Log the count of items in each category
-    console.log(`Synchronisation - Stats:
-      - Articles uniquement en local: ${syncStatus.localOnly.length}
-      - Articles uniquement sur le cloud: ${syncStatus.cloudOnly.length}
-      - Articles présents aux deux endroits: ${syncStatus.bothSources.length}
+    console.log(`Synchronization - Stats:
+      - Local-only items: ${syncStatus.localOnly.length}
+      - Cloud-only items: ${syncStatus.cloudOnly.length}
+      - Items present in both locations: ${syncStatus.bothSources.length}
     `);
-    // Créer les vêtements localOnly sur le cloud
+    // Create localOnly clothing items on the cloud
     await sendToCloud(user, syncStatus.localOnly);
 
-    // Créer les vêtements cloudOnly en local
-    // // TODO: implémenter flag isDeleted pour ne pas copier en local des elements qu'on a voulu supprimer
+    // Create cloudOnly clothing items locally
+    // // TODO: implement isDeleted flag to avoid copying locally items that we wanted to delete
     await copyFromCloud(user, syncStatus.cloudOnly);
 
-    // Si c'est présent sur le cloud et en loca, on garde le plus récent
+    // If present on cloud and locally, keep the most recent
     await syncBothSources(user, syncStatus.bothSources);
 
     return syncStatus;
   } catch (error) {
-    console.error('Erreur lors de la synchronisation:', error);
+    console.error('Error during synchronization:', error);
     throw error;
   }
 };
@@ -185,7 +185,7 @@ const copyFromCloud = async (user: UserAPI, cloudClothes: Clothing[]) => {
     // Save all clothing items in a batch, preserving the client IDs
     for (let i = 0; i < clothingDataArray.length; i++) {
       const clothingId = clothingDataArray[i].clientId;
-      // Check if clothing already exits locally and is tagged as deleted
+      // Check if clothing already exists locally and is tagged as deleted
       const localClothing = await getClothingById(clothingId);
       console.log(JSON.stringify(localClothing));
       if (localClothing?.isDeleted) {
@@ -211,13 +211,13 @@ const syncBothSources = async (
 ) => {
   try {
     for (let i = 0; i < clothes.length; i++) {
-      // Version local plus à jour
+      // Local version more up-to-date
       if (
         new Date(clothes[i].local.updatedAt).getTime() >
         new Date(clothes[i].cloud.updatedAt).getTime()
       ) {
         await updateClothing(user, clothes[i].local);
-        // Version cloud plus à jour
+        // Cloud version more up-to-date
       } else if (
         new Date(clothes[i].local.updatedAt).getTime() <
         new Date(clothes[i].cloud.updatedAt).getTime()
@@ -226,7 +226,7 @@ const syncBothSources = async (
       }
     }
   } catch (error) {
-    throw new Error("Can't sync both source");
+    throw new Error("Can't sync both sources");
   }
 };
 
@@ -238,7 +238,7 @@ const updateClothing = async (user: UserAPI, clothing: Clothing) => {
       body
     );
     return {
-      message: 'Clothing mis à jour',
+      message: 'Clothing updated',
       data: response,
     };
   } catch (error) {

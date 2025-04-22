@@ -7,7 +7,7 @@ import { EventEmitter } from 'events';
 export const syncEmitter = new EventEmitter();
 
 /**
- * Récupère l'identifiant unique du téléphone selon la plateforme
+ * Get the unique device identifier based on platform
  */
 const getDeviceId = async (): Promise<string> => {
   let deviceId = '';
@@ -26,7 +26,7 @@ const getDeviceId = async (): Promise<string> => {
 };
 
 /**
- * Vérifie si un utilisateur existe déjà dans l'API avec l'ID de l'appareil
+ * Check if a user already exists in the API with the device ID
  */
 const checkExistingUser = async (deviceId: string) => {
   try {
@@ -50,7 +50,7 @@ const checkExistingUser = async (deviceId: string) => {
 };
 
 /**
- * Crée un nouvel utilisateur dans l'API avec l'ID de l'appareil
+ * Create a new user in the API with the device ID
  */
 const createUser = async (deviceId: string) => {
   const response = await axios.post(
@@ -64,27 +64,27 @@ const createUser = async (deviceId: string) => {
   );
 
   if (response.status !== 201) {
-    throw new Error(`Erreur API: ${response.status}`);
+    throw new Error(`API Error: ${response.status}`);
   }
 
-  console.log('User créé avec succès:', response.data);
+  console.log('User created successfully:', response.data);
   return response.data;
 };
 
 /**
- * Récupère ou crée un utilisateur en fonction de l'ID de l'appareil
+ * Get or create a user based on the device ID
  */
 const getDeviceUser = async () => {
   try {
     const deviceId = await getDeviceId();
 
-    // Vérifie si un user existe déjà
+    // Check if a user already exists
     const existingUser = await checkExistingUser(deviceId);
     if (existingUser) {
       return existingUser;
     }
 
-    // Si l'utilisateur n'existe pas, on le crée
+    // If the user doesn't exist, we create it
     return await createUser(deviceId);
   } catch (error) {
     throw error;
@@ -92,26 +92,26 @@ const getDeviceUser = async () => {
 };
 
 /**
- * Synchronise l'identifiant unique du téléphone avec le serveur backend.
- * Récupère l'ID unique de l'appareil et l'envoie à l'API REST.
+ * Synchronize the unique phone ID with the backend server.
+ * Gets the unique device ID and sends it to the REST API.
  */
 export const syncUser = async () => {
   try {
-    // Récupére l'utilisateur dans l'API
+    // Get the user from the API
     const user = await getDeviceUser();
 
-    // Synchronise les clothing
+    // Synchronize clothing
     await syncClothing(user);
 
     syncEmitter.emit('clothes-updated');
     return {
-      message: 'Synchronisé',
+      message: 'Synchronized',
       data: user,
     };
   } catch (error) {
-    console.error('Échec de la synchronisation utilisateur:', error);
+    console.error('User synchronization failed:', error);
     return {
-      message: 'Erreur de synchro',
+      message: 'Sync error',
     };
   }
 };

@@ -23,7 +23,7 @@ export const saveClothing = async (
     // Create new clothing items
     const newClothingItems: Clothing[] = clothingArray.map((item) => ({
       ...item,
-      clientId: clientId || uuid.v4().toString(), // On peut set nous meme le clientId si on synchro depuis le cloud
+      clientId: clientId || uuid.v4().toString(), // We can set the clientId ourselves when syncing from the cloud
       createdAt: new Date(),
       updatedAt: new Date(),
       isSynced: false,
@@ -166,7 +166,7 @@ export const tagDelete = async (id: string): Promise<boolean> => {
   try {
     const clothing = await getClothingById(id);
     if (!clothing) {
-      throw new Error("Clothing doesn't exist");
+      throw new Error('Clothing item does not exist');
     }
     clothing.isDeleted = true;
 

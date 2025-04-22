@@ -33,12 +33,12 @@ export default function OutfitList() {
     }
   }, []);
 
-  // Effet pour le chargement initial et l'écoute des événements de synchronisation
+  // Effect for initial loading and sync event listening
   useEffect(() => {
     loadOutfits();
 
-    // Écouter les événements de mise à jour des vêtements pour rafraîchir les tenues
-    // (car les tenues contiennent des vêtements qui pourraient être mis à jour)
+    // Listen for clothing update events to refresh outfits
+    // (because outfits contain clothing items that might be updated)
     syncEmitter.on('clothes-updated', loadOutfits);
 
     return () => {
@@ -46,7 +46,7 @@ export default function OutfitList() {
     };
   }, [loadOutfits]);
 
-  // Effet pour réagir au paramètre refresh
+  // Effect to react to the refresh parameter
   useEffect(() => {
     if (refresh) {
       loadOutfits();

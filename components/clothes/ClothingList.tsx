@@ -17,7 +17,7 @@ import COLORS from '@/theme/colors';
 import { Category, Clothing } from '@/types/clothing';
 import { getClothes } from '@/utils/storage/index';
 
-// Interface pour les sections par catégorie
+// Interface for category sections
 interface CategorySection {
   category: Category;
   clothes: Clothing[];
@@ -33,14 +33,14 @@ export default function ClotheList() {
     []
   );
 
-  // Déplacer loadClothes à l'extérieur du useEffect pour pouvoir l'utiliser dans d'autres fonctions
+  // Move loadClothes outside useEffect to be able to use it in other functions
   const loadClothes = useCallback(async () => {
     try {
       setRefreshing(true);
       const clothesData = await getClothes();
       setClothes(clothesData);
 
-      // Grouper les vêtements par catégorie
+      // Group clothes by category
       const categories = Object.values(Category);
       const sections: CategorySection[] = categories
         .map((category) => ({
@@ -48,9 +48,9 @@ export default function ClotheList() {
           clothes: clothesData.filter(
             (clothing) => clothing.category === category
           ),
-          expanded: false, // Toutes les sections sont fermées par défaut
+          expanded: false, // All sections are closed by default
         }))
-        .filter((section) => section.clothes.length > 0); // Ne garder que les catégories avec des vêtements
+        .filter((section) => section.clothes.length > 0); // Only keep categories with clothing items
 
       setCategorySections(sections);
     } catch (error) {
@@ -61,27 +61,27 @@ export default function ClotheList() {
     }
   }, []);
 
-  // Effet pour la mise à jour initiale et lors de la réception d'un événement de synchronisation
+  // Effect for initial update and when receiving a sync event
   useEffect(() => {
     loadClothes();
 
-    // Écouter l'événement de mise à jour
+    // Listen for update event
     syncEmitter.on('clothes-updated', loadClothes);
 
-    // Nettoyer l'écouteur quand le composant est démonté
+    // Clean up listener when component unmounts
     return () => {
       syncEmitter.off('clothes-updated', loadClothes);
     };
   }, [loadClothes]);
 
-  // Effet supplémentaire pour recharger les données lorsque le paramètre refresh change
+  // Additional effect to reload data when the refresh parameter changes
   useEffect(() => {
     if (refresh) {
       loadClothes();
     }
   }, [refresh, loadClothes]);
 
-  // Fonction pour basculer l'état d'expansion d'une section
+  // Function to toggle a section's expanded state
   const toggleSection = (index: number) => {
     setCategorySections((prevSections) => {
       const newSections = [...prevSections];

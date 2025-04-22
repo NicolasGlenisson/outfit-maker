@@ -24,7 +24,7 @@ export default function Button({
   isFullWidth = false,
   style,
 }: ButtonProps) {
-  // Utiliser les props alternatives si les originales ne sont pas fournies
+  // Use alternative props if original ones are not provided
   const buttonText = title || '';
 
   return (

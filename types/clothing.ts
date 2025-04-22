@@ -1,4 +1,4 @@
-// Catégories de vêtements
+// Clothing categories
 export enum Category {
   TOP = 'top',
   BOTTOM = 'bottom',
@@ -12,7 +12,7 @@ export enum Category {
   OTHER = 'other',
 }
 
-// Saisons applicables aux vêtements
+// Seasons applicable to clothing items
 export enum Season {
   SPRING = 'spring',
   SUMMER = 'summer',
@@ -20,7 +20,7 @@ export enum Season {
   WINTER = 'winter',
 }
 
-// Occasions d'utilisation des vêtements
+// Usage occasions for clothing items
 export enum Occasion {
   CASUAL = 'casual',
   FORMAL = 'formal',
@@ -31,9 +31,9 @@ export enum Occasion {
   TRAVEL = 'travel',
 }
 
-// Interface du vêtement
+// Clothing interface
 export interface Clothing {
-  clientId: string; // Utilisation de string pour UUID ou identifiants uniques sur le frontend
+  clientId: string; // Using string for UUID or unique identifiers on the frontend
   name: string;
   category: Category;
   color?: string;
@@ -47,13 +47,13 @@ export interface Clothing {
   isDeleted?: boolean;
 }
 
-// Interface pour le formulaire de création/modification de vêtement
+// Interface for the clothing creation/modification form
 export type ClothingFormData = Omit<
   Clothing,
   'clientId' | 'createdAt' | 'updatedAt' | 'isSynced'
 >;
 
-// Interface pour une tenue complète
+// Interface for a complete outfit
 export interface Outfit {
   id: string;
   name: string;
@@ -63,10 +63,10 @@ export interface Outfit {
   updatedAt: Date;
 }
 
-// Interface pour le formulaire de outfit
+// Interface for the outfit form
 export type OutfitFormData = Omit<Outfit, 'id' | 'createdAt' | 'updatedAt'>;
 
-// Interface pour planifier une tenue
+// Interface for scheduling an outfit
 export interface OutfitSchedule {
   id: string;
   date: Date;
@@ -75,7 +75,7 @@ export interface OutfitSchedule {
   updatedAt: Date;
 }
 
-// Interface pour l'utilisateur (pour une future implémentation avec authentication)
+// User interface (for future implementation with authentication)
 export interface User {
   id: string;
   email: string;
